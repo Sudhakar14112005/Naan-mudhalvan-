@@ -1,0 +1,71 @@
+import random
+import time
+from datetime import datetime
+import matplotlib.pyplot as plt
+
+# Simulated disaster types
+disasters = ["Earthquake", "Flood", "Cyclone", "Wildfire"]
+
+# Lists to store data for plotting
+timestamps = []
+severities = []
+labels = []
+
+# Simulated data feed
+def simulate_disaster_data():
+    return {
+        "type": random.choice(disasters),
+        "location": random.choice(["California", "Mumbai", "Tokyo", "Jakarta"]),
+        "severity": random.randint(1, 10),
+        "timestamp": datetime.now().strftime("%H:%M:%S")
+    }
+
+# Prediction logic
+def predict_disaster():
+    data = simulate_disaster_data()
+    print("\n[Prediction]")
+    print(f"Disaster: {data['type']}")
+    print(f"Location: {data['location']}")
+    print(f"Severity Level: {data['severity']}/10")
+    print(f"Predicted Time: {data['timestamp']}")
+
+    # Store data for plot
+    timestamps.append(data['timestamp'])
+    severities.append(data['severity'])
+    labels.append(f"{data['type']} in {data['location']}")
+
+    if data['severity'] > 7:
+        send_alert(data)
+    else:
+        print("Monitoring situation. No immediate action required.")
+
+# Alert logic
+def send_alert(data):
+    print("\n*** ALERT ***")
+    print(f"High risk of {data['type']} in {data['location']}!")
+    print("Initiating emergency response protocols...")
+
+# Scatter plot display
+def show_scatter_plot():
+    plt.figure(figsize=(10, 5))
+    plt.scatter(timestamps, severities, color='red')
+
+    for i, label in enumerate(labels):
+        plt.text(timestamps[i], severities[i] + 0.3, label, fontsize=8, ha='center', rotation=45)
+
+    plt.title("Disaster Severity Over Time")
+    plt.xlabel("Time")
+    plt.ylabel("Severity Level (1-10)")
+    plt.ylim(0, 11)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+# Main execution
+if __name__ == "__main__":
+    print("Natural Disaster Prediction and Management System")
+    for _ in range(5):  # Simulate 5 prediction cycles
+        predict_disaster()
+        time.sleep(1)
+
+    show_scatter_plot()
